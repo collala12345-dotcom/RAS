@@ -1,0 +1,29 @@
+#유사 프로젝트 내용정리
+프로젝트명 : TC 생성 Agent --> 설계서를 OCR로 인식하여 내용을 파악하고, Testcase를 생성하는 Agent
+부제 : 설계서 입력부터 OCR object 추출, TC 생성, 자기검증까지 - FR Coverage 100%를 자체 검증하는 파이프라인
+
+-동작 Work Flow
+(1) 입력문서를 그대로 읽는다 : docx,md,html,pptx,xlsx 설계서와 embedded excel을 별도 변환없이 수용
+(2) OCR로 그림,표,수식을 이해한다 : 기존에 없던 문서 전처리 Skill이 OCR/Vision 기반으로 object를 추출 - threshold matrix,level mapping, 수식을 TC근거로 해석
+(3) 근거가 보이는 TC를 만든다 : Pre-condition, Test Steps, Expected Result 생성 +Figure-FR trace 명시로 추적 가능성 확보
+(4) 스스로 검증하고 다시 개선한다 : Overall 80점 이상, FR Coverage 100점 목표로 fall step을 되돌려 재생성
+
+-SKILL 2개를 엮어서 동작을 구성(비정형데이터를 잘 처리해야하는구나에 집중??)
+1.frfd-extractor v3 
+설계서[docx/md/html/pptx/xlsx]에서 FR,HLD,DLD 그림 도표 emvedded excell을 추출하여 구조화된 Markdown으로 변환
+다중 포멧 -> markdown 변환
+FR->HLD->DLD 계층 매핑 : ID 정규화
+도표,그림 embedded Excel 추출 : media, chart, embeddedworkbook을 아티택트로 기록
+Figure Interpretation 산출물 : 이미지의 문서 위치 주변 문맥 OCR 비전해석 TC 반영 포인트를 figure_interpretation.ed/json으로 구조화
+PKQ 버전 필터링 : 특정 버전 지칭 시 active FR set만 TC 입력으로 남기는 hard filter
+Testability 메타 데이터 : control_surface/observers_surface/runtime_multability/testability-risk 부여
+Design-OAP 인벤토리 : 참조되나 미기술된 동작을 따로 기록
+
+2.tesetcase-create v3 : frfd-extractor 산출물을 근거로 기능 Tc를 자동 생성하고, G1~G4 이전 게이트로 자가 검증하는 루프
+인프라 무관 : LangGraph/ChromaDB 없이 AI 에이전트 자체가 문서를 읽고 추론하여 TC 생성
+5단계 프로세스 : Gotchas 확인 -> FR,FD intake -> FR추출->FD 분석-> TC 생성-> 자가 평가 루프(최대 3회)
+실행 가능성&관측성 6분류 : 직접 설정, 간접유발 관측전용,내부금지,런타임불가 -> tc생성전 질문
+PEW/Counter Grounding : 실제 PEQ catalog 매칭, 추측금지 명시
+G1~G4 이전 auto-Fail 게이트 : 관측성,실현가능성,설계근거, 스코프 위반시 점수 무관 전체 FAIL
+설계 공백 -> blocked : 근거 없는 동작을 단정하지 않고사유로 정확하게 노출
+FR Coverage 100% 목표 - 모든 FR에 TC 매핑, fail step은 step 2 로 복귀하여 재생성
