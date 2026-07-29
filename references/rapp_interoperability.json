@@ -1,0 +1,190 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created_at": "2026-07-14",
+    "description": "rAPP 간 상호운용성 (Inter-Operability) 규칙 정의"
+  },
+  "COM": {
+    "interacts_with": ["ESM", "LBM", "CoverageHole"],
+    "interaction_rules": {
+      "ESM": {
+        "type": "time_exclusion",
+        "description": "ESM operation time 동안 PM counter 수집 제외",
+        "superset_calculation": true,
+        "management_period": "2 weeks",
+        "requirements": [
+          "COM should receive the ESM non-operation time information from the ESM",
+          "ESM operation time is superset of the ESM operation time of all cells in the cluster",
+          "Collects counters except for the superset of ESM operation time",
+          "The time excluded from counter collection is defined as 'exceptionPMcollectionTime'",
+          "COM should store exceptionPMcollectionTime values from 2 weeks ago for fallback operation"
+        ],
+        "tc_verification": [
+          "ESM operation time superset 계산 검증",
+          "exceptionPMcollectionTime 관리 검증",
+          "2 주간 데이터 유지 검증",
+          "PM counter 수집 제외 시간 검증"
+        ],
+        "tc_precondition": [
+          "ESM operation time 정보를 사전에 확보해야 함",
+          "Cluster 별 cell 목록이 정의되어 있어야 함",
+          "Tilt Control Start Hour 와 Tilt Control Duration 이 설정되어 있어야 함"
+        ]
+      },
+      "LBM": {
+        "type": "optimization_exclusion",
+        "description": "LBM 은 COM tilt change target cell/group 를 최적화에서 제외",
+        "information_provide": true,
+        "requirements": [
+          "LBM do not optimize the COM tilt change target cell and cell group",
+          "LBM operate at different times from ESM",
+          "LBM perform optimization again for the cell and cell group whose COM operation has been completed",
+          "COM should be able to provide the tilt control cell information to the LBM"
+        ],
+        "tc_verification": [
+          "LBM 최적화 제외 검증",
+          "정보 제공 인터페이스 검증",
+          "동작 시간 분리 검증"
+        ],
+        "tc_precondition": [
+          "COM tilt control target set 이 정의되어 있어야 함",
+          "Overshooting/Coverage Hole group 정보가 있어야 함"
+        ]
+      },
+      "CoverageHole": {
+        "type": "priority",
+        "description": "Overshooting 이 Coverage Hole 보다 우선 처리 (동일 COM 내부)",
+        "priority_order": ["Overshooting", "CoverageHole"],
+        "requirements": [
+          "COM Tilt Control Work takes into account the interoperability requirements between Overshooting and Coverage Hole algorithms",
+          "Overshooting is prioritized over Coverage Hole when both exist in the same cell",
+          "COM Tilt Control Target Set is configured based on priority"
+        ],
+        "tc_verification": [
+          "우선순위 규칙 검증",
+          "동일 cell 동시 발생 처리 검증",
+          "Tilt Control Target Set 우선순위 반영 검증"
+        ],
+        "tc_precondition": [
+          "Overshooting 과 Coverage Hole 조건이 동시에 발생하는 cell 이 존재",
+          "Priority 규칙이 설정되어 있어야 함"
+        ]
+      }
+    },
+    "operation_sequence": {
+      "weekly_schedule": {
+        "sunday": "COM determines tilt of N+1 week using ESM operation window information",
+        "monday_to_saturday": "COM algorithm execution",
+        "next_monday": "ESM and LBM operate (excluding COM tilt control targets)"
+      },
+      "information_flow": {
+        "from_ESM": ["ESM non-operation time information"],
+        "to_LBM_ESM": ["COM tilt control target set", "Overshooting/Coverage Hole group information"]
+      }
+    }
+  },
+  "ESM": {
+    "interacts_with": ["COM", "LBM"],
+    "interaction_rules": {
+      "COM": {
+        "type": "time_provision",
+        "description": "ESM 은 COM 에게 non-operation time 정보 제공",
+        "requirements": [
+          "ESM should provide non-operation time information to COM",
+          "ESM operates at different times from LBM"
+        ]
+      },
+      "LBM": {
+        "type": "time_separation",
+        "description": "ESM 과 LBM 은 서로 다른 시간에 동작",
+        "requirements": [
+          "ESM and LBM operate at different times"
+        ]
+      }
+    }
+  },
+  "LBM": {
+    "interacts_with": ["COM", "ESM"],
+    "interaction_rules": {
+      "COM": {
+        "type": "optimization_exclusion",
+        "description": "LBM 은 COM tilt change target 을 최적화에서 제외",
+        "requirements": [
+          "LBM do not optimize the COM tilt change target cell and cell group",
+          "LBM perform optimization again for the cell whose COM operation has been completed"
+        ]
+      },
+      "ESM": {
+        "type": "time_separation",
+        "description": "LBM 과 ESM 은 서로 다른 시간에 동작",
+        "requirements": [
+          "LBM and ESM operate at different times"
+        ]
+      }
+    }
+  },
+  "tc_checklist_template": {
+    "ESM_Interoperability": [
+      {
+        "id": "IO-ESM-1",
+        "check": "ESM Operation Time Superset 계산",
+        "question": "Cluster 내 모든 Cell 의 ESM operation time 을 Superset 으로 계산하는가?",
+        "pass_criteria": "Superset 이 올바르게 계산됨 (예: Cell1 2-6am + Cell2 3-7am = 1-7am)",
+        "example": "Cell1 (2am~6am, 1pm~2pm) + Cell2 (3am~7am) → exceptionPMcollectionTime = 7 hours (1am~7am, 1pm~2pm)"
+      },
+      {
+        "id": "IO-ESM-2",
+        "check": "PM Counter 수집 제외",
+        "question": "ESM operation time 동안 PM counter 수집을 제외하는가?",
+        "pass_criteria": "exceptionPMcollectionTime 동안 수집된 PM counter 가 없음",
+        "example": "2am~6am 동안 수집된 PM counter 가 제외됨"
+      },
+      {
+        "id": "IO-ESM-3",
+        "check": "2 주간 관리",
+        "question": "Fallback 동작을 위해 2 주간 exceptionPMcollectionTime 을 관리하는가?",
+        "pass_criteria": "과거 2 주 (14 일) 치 exceptionPMcollectionTime 이 저장됨",
+        "example": "D-14 부터 D 까지 모든 일자의 exceptionPMcollectionTime 이 관리됨"
+      },
+      {
+        "id": "IO-ESM-4",
+        "check": "정보 제공 인터페이스",
+        "question": "COM 이 ESM/LBM 에게 Tilt control target 정보를 제공하는가?",
+        "pass_criteria": "COM tilt control target set 과 overshooting/coverage hole group 정보 제공됨",
+        "example": "TiltControlTargetSet, OvershootingCellGroup, CoverageHoleCellGroup 정보 전달"
+      }
+    ],
+    "LBM_Interoperability": [
+      {
+        "id": "IO-LBM-1",
+        "check": "최적화 제외",
+        "question": "LBM 이 COM tilt change target cell/group 를 최적화에서 제외하는가?",
+        "pass_criteria": "COM 이 지정한 tilt change target 이 LBM 최적화에서 제외됨",
+        "example": "COM 이 Tilt Down 한 cell 을 LBM 이 다시 최적화하지 않음"
+      },
+      {
+        "id": "IO-LBM-2",
+        "check": "정보 수신 인터페이스",
+        "question": "LBM 이 COM 으로부터 Tilt control target 정보를 수신하는가?",
+        "pass_criteria": "COM tilt control target set 정보를 LBM 이 수신함",
+        "example": "LBM 이 COM 으로부터 TiltControlTargetSet 수신"
+      }
+    ],
+    "CoverageHole_Interoperability": [
+      {
+        "id": "IO-CH-1",
+        "check": "우선순위 규칙",
+        "question": "Overshooting 이 Coverage Hole 보다 우선 처리되는가?",
+        "pass_criteria": "동일 cell 에서 Overshooting 과 Coverage Hole 이 동시 발생 시 Overshooting 이 먼저 처리됨",
+        "example": "Priority 1 (Overshooting) < Priority 2 (Coverage Hole)"
+      },
+      {
+        "id": "IO-CH-2",
+        "check": "Tilt Control Target Set 구성",
+        "question": "우선순위에 따라 Tilt Control Target Set 이 구성되는가?",
+        "pass_criteria": "Overshooting priority 가 높을 때 Overshooting cell 이 먼저 포함됨",
+        "example": "COM Tilt Control Target Set 에 Overshooting cell 이 먼저 추가됨"
+      }
+    ]
+  }
+}

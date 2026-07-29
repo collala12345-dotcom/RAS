@@ -1,0 +1,185 @@
+{
+  "metadata": {
+    "rapp": "COM",
+    "version": "1.0",
+    "created_at": "2026-07-14",
+    "description": "COM rAPP Feature Dependency Graph - Multi-FR 시나리오 검증을 위한 의존성/충돌 관계 정의"
+  },
+  "features": {
+    "FR10.COA.SR1.10": {
+      "name": "Overshooting Detection/Resolution",
+      "description": "Overshooting cell 탐지 및 해결 (Tilt down)",
+      "priority": 1,
+      "depends_on": ["FR11", "FR12"],
+      "conflicts_with": ["FR10.COA.SR1.11"],
+      "trigger_conditions": {
+        "ta_far_distance_ratio": "> 20%",
+        "dl_mac_throughput": "< Th_DMacTputOp",
+        "dl_efficiency": "< 80% of baseline",
+        "ho_failure_rate": "> 5%"
+      },
+      "resolution_action": {
+        "type": "Tilt Down",
+        "effect": "Coverage 축소",
+        "side_effect": "Coverage Hole 발생 가능성 증가"
+      },
+      "kpi_improvement": ["DL MAC Throughput", "HO Failure Rate", "DL Efficiency"],
+      "trade_off_with": ["FR10.COA.SR1.11"]
+    },
+    "FR10.COA.SR1.11": {
+      "name": "Coverage Hole Detection/Resolution",
+      "description": "Coverage Hole 탐지 및 해결 (Tilt up)",
+      "priority": 2,
+      "depends_on": ["FR11", "FR12"],
+      "conflicts_with": ["FR10.COA.SR1.10"],
+      "trigger_conditions": {
+        "average_cqi": "< 7",
+        "dl_bler": "> 10%",
+        "ul_bler": "> 10%",
+        "drop_rate": "> 2%",
+        "rsrp_event_a3_bad": "> 100"
+      },
+      "resolution_action": {
+        "type": "Tilt Up",
+        "effect": "Coverage 확대",
+        "side_effect": "Overshooting 발생 가능성 증가"
+      },
+      "kpi_improvement": ["CQI", "DL/UL BLER", "Drop Rate"],
+      "trade_off_with": ["FR10.COA.SR1.10"]
+    },
+    "FR10.COA.SR1.12": {
+      "name": "Congestion Detection/Resolution",
+      "description": "혼잡 Cell 탐지 및 해결 (PRB 기반)",
+      "priority": 3,
+      "depends_on": ["FR11", "FR12"],
+      "conflicts_with": [],
+      "trigger_conditions": {
+        "prb_usage": "> 90%",
+        "ue_count": "> 100 per cell",
+        "throughput": "< 70% of baseline"
+      },
+      "resolution_action": {
+        "type": "Load Balancing / Parameter Adjustment",
+        "effect": "Traffic 분산",
+        "side_effect": "Handover 증가 가능성"
+      },
+      "kpi_improvement": ["PRB Usage", "UE Throughput", "Congestion Rate"],
+      "trade_off_with": []
+    },
+    "FR11": {
+      "name": "NE List Reception (Type 1)",
+      "description": "CM/PM 정보 관리를 위한 NE List 수신",
+      "priority": 0,
+      "depends_on": [],
+      "conflicts_with": [],
+      "trigger_conditions": {},
+      "resolution_action": null,
+      "kpi_improvement": [],
+      "trade_off_with": [],
+      "is_prerequisite_for": ["FR10.COA.SR1.10", "FR10.COA.SR1.11", "FR10.COA.SR1.12"]
+    },
+    "FR12": {
+      "name": "NE List Reception (Type 2)",
+      "description": "기능 운영을 위한 NE List 수신 (Overshooting/Coverage Hole 컬럼 포함)",
+      "priority": 0,
+      "depends_on": ["FR11"],
+      "conflicts_with": [],
+      "trigger_conditions": {},
+      "resolution_action": null,
+      "kpi_improvement": [],
+      "trade_off_with": [],
+      "is_prerequisite_for": ["FR10.COA.SR1.10", "FR10.COA.SR1.11", "FR10.COA.SR1.12"]
+    }
+  },
+  "multi_fr_scenarios": {
+    "simultaneous_overshooting_coverage_hole": {
+      "name": "동시 발생: Overshooting + Coverage Hole",
+      "description": "같은 Cell 에서 Overshooting 과 Coverage Hole 조건이 동시에 발생",
+      "involved_frs": ["FR10.COA.SR1.10", "FR10.COA.SR1.11"],
+      "scenario_type": "simultaneous",
+      "expected_behavior": "Priority 에 따라 Overshooting 이 먼저 처리됨",
+      "test_points": [
+        "두 조건 동시 만족 시 어떤 FR 이 먼저 실행되는가?",
+        "우선순위 규칙이 올바르게 적용되는가?",
+        "두 번째 FR 은 다음 optimization period 에 처리되는가?"
+      ]
+    },
+    "sequential_overshooting_to_coverage_hole": {
+      "name": "순차 발생: Overshooting 해결 → Coverage Hole 발생",
+      "description": "Overshooting 해결을 위한 Tilt down 이 Coverage Hole 을 발생시킴 (Trade-off)",
+      "involved_frs": ["FR10.COA.SR1.10", "FR10.COA.SR1.11"],
+      "scenario_type": "sequential_trade_off",
+      "expected_behavior": "Trade-off 관계가 로그에 기록되고, 다음 cycle 에서 Coverage Hole 처리 고려됨",
+      "test_points": [
+        "Tilt down 후 Coverage Hole 조건이 악화되는가?",
+        "Trade-off 관계가 로그에 기록되는가?",
+        "다음 cycle 에서 Coverage Hole 이 처리되는가?"
+      ]
+    },
+    "sequential_coverage_hole_to_overshooting": {
+      "name": "순차 발생: Coverage Hole 해결 → Overshooting 발생",
+      "description": "Coverage Hole 해결을 위한 Tilt up 이 Overshooting 을 발생시킴 (Trade-off)",
+      "involved_frs": ["FR10.COA.SR1.11", "FR10.COA.SR1.10"],
+      "scenario_type": "sequential_trade_off",
+      "expected_behavior": "Trade-off 관계가 로그에 기록되고, 다음 cycle 에서 Overshooting 처리 고려됨",
+      "test_points": [
+        "Tilt up 후 Overshooting 조건이 악화되는가?",
+        "Trade-off 관계가 로그에 기록되는가?",
+        "다음 cycle 에서 Overshooting 이 처리되는가?"
+      ]
+    },
+    "congested_with_coverage_issue": {
+      "name": "혼잡 + Coverage 문제 동시 발생",
+      "description": "혼잡 Cell 에서 Coverage Hole 또는 Overshooting 이 동시 발생",
+      "involved_frs": ["FR10.COA.SR1.12", "FR10.COA.SR1.10", "FR10.COA.SR1.11"],
+      "scenario_type": "simultaneous",
+      "expected_behavior": "Priority 에 따라 Coverage 문제가 먼저 처리됨 (Priority 1/2 > 3)",
+      "test_points": [
+        "혼잡 조건과 Coverage 문제가 동시 발생 시 어떤 FR 이 먼저 실행되는가?",
+        "우선순위 규칙이 올바르게 적용되는가?"
+      ]
+    }
+  },
+  "priority_rules": {
+    "description": "여러 FR 이 동시에触发될 때 우선순위 규칙",
+    "rules": [
+      {
+        "rule_id": "PR-1",
+        "description": "Overshooting 이 Coverage Hole 보다 우선 (Priority 1 < 2)",
+        "rationale": "Overshooting 은 인접 Cell 에 간섭을 유발하여 네트워크 전체에 영향"
+      },
+      {
+        "rule_id": "PR-2",
+        "description": "Coverage 문제가 Congestion 보다 우선",
+        "rationale": "Coverage 는 기본 연결성 문제, Congestion 은 성능 저하 문제"
+      },
+      {
+        "rule_id": "PR-3",
+        "description": "동일 Priority 내에서는 Severity 높은 순서로 처리",
+        "rationale": "더 심각한 문제부터 해결"
+      },
+      {
+        "rule_id": "PR-4",
+        "description": "Trade-off 관계인 FR 은 다음 optimization period 에 순차 처리",
+        "rationale": "동일 cycle 에서 상충되는 액션 방지"
+      }
+    ]
+  },
+  "conflict_resolution": {
+    "description": "FR 간 충돌 해결 규칙",
+    "rules": [
+      {
+        "rule_id": "CR-1",
+        "conflict_type": "Overshooting vs Coverage Hole",
+        "resolution": "Priority 에 따라 Overshooting 우선, Coverage Hole 은 다음 period 에 처리",
+        "logging": "Trade-off 관계 로그 기록 필수"
+      },
+      {
+        "rule_id": "CR-2",
+        "conflict_type": "동일 FR 내 여러 Cell",
+        "resolution": "Severity 높은 Cell 부터 순차 처리",
+        "logging": "처리 순서 로그 기록"
+      }
+    ]
+  }
+}
