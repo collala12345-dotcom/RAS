@@ -1,0 +1,173 @@
+{
+  "review_id": "REVIEW-UNKNOWN-20260722145023",
+  "tc_id": "UNKNOWN",
+  "tc_v1_path": "input_tc_v1.md",
+  "tc_v1_checksum": "736048fdb4af0e35",
+  "generated_at": "2026-07-22T05:50:23.346362+00:00",
+  "gate1_status": "READY",
+  "gate2_result": {
+    "status": "READY_FOR_REVIEW",
+    "failed_checks": [],
+    "affected_change_ids": [],
+    "required_action": ""
+  },
+  "proposal_count": {
+    "p1": 0,
+    "p2": 5,
+    "p3": 0,
+    "total": 5
+  },
+  "proposals": [
+    {
+      "change_id": "CHG-001",
+      "review_block_id": "2-1",
+      "priority": "P2",
+      "priority_reason_code": "MISSING_REQUIRED_ITEM",
+      "operation": "ADD",
+      "tc_location": {
+        "section": "Test Purpose/Procedure/Pass/Fail",
+        "item_id": null,
+        "step_id": null
+      },
+      "issue_type": "missing",
+      "finding": "Requirement EVD-REQ-001 의 검증 연결이 부족합니다: Purpose, Procedure, Pass/Fail 누락",
+      "impact": "FR-11 요구사항의 검증 여부 불명확",
+      "before_text": null,
+      "proposed_text": "Purpose, Procedure, Pass/Fail 에 FR-11 요구사항 검증 내용 추가",
+      "rationale": "Requirement EVD-REQ-001 의 검증 연결이 부족합니다: Purpose, Procedure, Pass/Fail 누락",
+      "related_requirement_ids": [
+        "EVD-REQ-001"
+      ],
+      "evidence_refs": [
+        "EVD-REQ-001"
+      ],
+      "evidence_status": "CONFIRMED",
+      "evidence_status_label_ko": "근거로 확인됨",
+      "limitations": [],
+      "citations": [
+        {
+          "evidence_id": "EVD-REQ-001",
+          "document_title": "FR-11",
+          "version": "2.0",
+          "section": "3.2",
+          "source_excerpt": "The system shall control Overshooting Detection per Carrier Frequency...",
+          "relevance": "Requirement EVD-REQ-001 의 검증 연결이 부족합니다: Purpose, Procedure, Pass/Fail 누락"
+        }
+      ],
+      "reviewer_decision": "WAITING"
+    },
+    {
+      "change_id": "CHG-002",
+      "review_block_id": "2-1",
+      "priority": "P2",
+      "priority_reason_code": "MISSING_REQUIRED_ITEM",
+      "operation": "ADD",
+      "tc_location": {
+        "section": "Test Purpose/Procedure/Pass/Fail",
+        "item_id": null,
+        "step_id": null
+      },
+      "issue_type": "missing",
+      "finding": "Requirement EVD-REQ-002 의 검증 연결이 부족합니다: Purpose, Procedure, Pass/Fail 누락",
+      "impact": "FR-11 요구사항의 검증 여부 불명확",
+      "before_text": null,
+      "proposed_text": "Purpose, Procedure, Pass/Fail 에 FR-11 요구사항 검증 내용 추가",
+      "rationale": "Requirement EVD-REQ-002 의 검증 연결이 부족합니다: Purpose, Procedure, Pass/Fail 누락",
+      "related_requirement_ids": [
+        "EVD-REQ-002"
+      ],
+      "evidence_refs": [
+        "EVD-REQ-002"
+      ],
+      "evidence_status": "CONFIRMED",
+      "evidence_status_label_ko": "근거로 확인됨",
+      "limitations": [],
+      "citations": [
+        {
+          "evidence_id": "EVD-REQ-002",
+          "document_title": "FR-11",
+          "version": "2.0",
+          "section": "3.3",
+          "source_excerpt": "Detection 결과에 따라 Resolution 을 수행한다...",
+          "relevance": "Requirement EVD-REQ-002 의 검증 연결이 부족합니다: Purpose, Procedure, Pass/Fail 누락"
+        }
+      ],
+      "reviewer_decision": "WAITING"
+    },
+    {
+      "change_id": "CHG-003",
+      "review_block_id": "2-2",
+      "priority": "P2",
+      "priority_reason_code": "MISSING_PRECONDITION",
+      "operation": "ADD",
+      "tc_location": {
+        "section": "Precondition",
+        "item_id": null,
+        "step_id": null
+      },
+      "issue_type": "missing",
+      "finding": "Cell 이 Precondition 에 명시되지 않았습니다",
+      "impact": "검증 대상이 불명확하여 TC 재현 어려움",
+      "before_text": null,
+      "proposed_text": "Precondition 에 Cell 구체적 값 또는 선택 규칙 명시",
+      "rationale": "Cell 이 Precondition 에 명시되지 않았습니다",
+      "related_requirement_ids": [],
+      "evidence_refs": [],
+      "evidence_status": "INSUFFICIENT",
+      "evidence_status_label_ko": "판단 근거 부족",
+      "limitations": [],
+      "citations": [],
+      "reviewer_decision": "WAITING"
+    },
+    {
+      "change_id": "CHG-004",
+      "review_block_id": "2-5",
+      "priority": "P2",
+      "priority_reason_code": "MISSING_STATE_TRANSITION",
+      "operation": "ADD",
+      "tc_location": {
+        "section": "Procedure",
+        "item_id": null,
+        "step_id": null
+      },
+      "issue_type": "uncovered_scenario",
+      "finding": "Negative Scenario (Invalid/Off/제외) 이 누락되었습니다",
+      "impact": "비정상 동작 검증 불완전",
+      "before_text": null,
+      "proposed_text": "Invalid 입력·Off 조건·제외 대상에 대한 Negative Scenario 추가",
+      "rationale": "Negative Scenario (Invalid/Off/제외) 이 누락되었습니다",
+      "related_requirement_ids": [],
+      "evidence_refs": [],
+      "evidence_status": "INSUFFICIENT",
+      "evidence_status_label_ko": "판단 근거 부족",
+      "limitations": [],
+      "citations": [],
+      "reviewer_decision": "WAITING"
+    },
+    {
+      "change_id": "CHG-005",
+      "review_block_id": "2-6",
+      "priority": "P2",
+      "priority_reason_code": "MISSING_STATE_TRANSITION",
+      "operation": "ADD",
+      "tc_location": {
+        "section": "Procedure/Pass/Fail",
+        "item_id": null,
+        "step_id": null
+      },
+      "issue_type": "uncovered_scenario",
+      "finding": "과거 Issue (EVD-ISSUE-001) 의 재현 조건이 TC 에 반영되지 않았습니다",
+      "impact": "과거 문제 재발 위험: 잘못된 Resolution Action 생성",
+      "before_text": null,
+      "proposed_text": "Trigger 조건 (Detection OFF 상태에서 Resolution ON) 을 Procedure 에 반영",
+      "rationale": "과거 Issue (EVD-ISSUE-001) 의 재현 조건이 TC 에 반영되지 않았습니다",
+      "related_requirement_ids": [],
+      "evidence_refs": [],
+      "evidence_status": "INSUFFICIENT",
+      "evidence_status_label_ko": "판단 근거 부족",
+      "limitations": [],
+      "citations": [],
+      "reviewer_decision": "WAITING"
+    }
+  ]
+}

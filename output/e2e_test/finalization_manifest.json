@@ -1,0 +1,19 @@
+{
+  "review_id": "REVIEW-UNKNOWN-20260722145023",
+  "source_tc_checksum": "736048fdb4af0e35",
+  "proposal_version": "1.0",
+  "reviewer_id": "test_reviewer",
+  "finalization_status": "FINAL",
+  "proposal_count": 5,
+  "accepted_count": 2,
+  "edited_and_accepted_count": 1,
+  "rejected_count": 1,
+  "held_count": 1,
+  "applied_change_ids": [
+    "CHG-001",
+    "CHG-003",
+    "CHG-002"
+  ],
+  "output_tc_v2_path": "output/enhanced_tc/tc_v2.md",
+  "change_history_path": "output/change_history/history.md"
+}
