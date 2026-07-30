@@ -1,0 +1,53 @@
+[3주차 실무 OJT]
+
+1. COM(Coverage Optimization Management) 알고리즘 공부
+(1) MICD(Minimum Inter Cell Distance) : 인접 두 cell 간의 최소거리=> 추정 Coverage를 계산하는데 사용
+추정 Coverage=MICD*보정계수(default=1.5)를 사용하여 MICD 계산 
+
+2. COM 관련 회의 참석  
+- 사업자 요구 사항에 따른 AI output에 의해 Resolution을 수행하는 AI-COM 기능 탑재
+- 기존 COM 알고리즘이 AI의 Overshooting Cell Group 예측 결과를 받아들여 Resolution을 수행
+- AI - Retraining 주기와 방식에 따른 추가적인 검증 과정이 필요 
+- CODC(Cell Outage Detection Compensation) 신규 rAPP과 COM 알고리즘과의 연관 group 제외 등 검증 과정 필요
+
+3. NOS(Network Operation Suite) 세미나 참여
+-NOS 도입 배경
+4G->5G 과정에서 기지국의 수가 폭발적으로 증가 --> S/W 업데이트를 수동으로 진행시 설치자에 따른 기지국 별 품질차이와 소요시간이 증가
+=> 품질 확보 균등 / 유지,보수 / 대규모 작업
+- NOS 목적 : ZTP(Zero Touch Provisioning)
+- NOS 구조 : rAPP 중 하나인 WFM(Work Flow Management)에 의한 flow 제어 / CIM, NFO 등 rAPP 동작
+
+4. Innovation day 참여 
+- 선배 프로님들이 그룹별 난제를 해결하기 위해 다양한 아이디어 및 tool을 시연 => GTE 팀의 방향성 파악 + 진행해야할 PJT 방향에 도움이 됨
+
+
+[개인 PJT]
+AI를 활용한 TC 생성 시에 겪는 문제점 개선 point를 도출하고 방안 마련
+이라는 주제를 "AI 기반 TC Review & 품질 개선 시스템" 으로 구체화
+
+RAG(Retrieval-Augmented Generatio) 시스템을 사용하여 방대한 양의 데이터를 사용하면서도 관리,검색이 가능하도록 하여 
+TC를 검토 및 보완 시, 다양한 데이터를 빠르고 정확하게 참고할 수 있도록 하였다.
+
+#데이터 전처리
+-기존 부족했던 3GPP 규격 데이터 문서를 늘림 (1개->약50개)
+- AI 친화적이지 않던 데이터 형태(docx,ppt,pdf,md)를 metadata를 사용한 jsonl 형태로 변환하여 추후 RAG 시스템에 사용할 DB를 구축하기 위한 준비
+- 현장&상용 문제 데이터 및 Test 결과 등은 추후 준비
+
+#SKILL(지침서) 프롬프트 작성
+-생성형 AI가 TC를 검토할 때 따라야하는 규칙,기준,입출력 형식 등을 나타낸 지침서
+-RAG 시스템을 구축하기 위한 문서 및 키워드 검색의 기준이 되도록 작성
+-TC 검증과 보완 기능에 초점을 맞추어 언제 사용하는가, 입력 형태 정보, 검증 기준(Requirement Coverage, Verification Point Coverage, Procedure Completeness, P/F Clarity) 등의 정보 제공
+
+# 데모 Output
+FR10.COA.SR1.11 : NR Coverage Optimization Manager should be able to control the ON/OFF of the following functions by frequency. – Overshooting Cell Detection  – Overshooting Cell Resolution
+를 임의로 대입하여 데모 output을 생성
+ 
+*Quality Report
+-Quality Score : Overall score, Risk Level, Decision에 대하여 점수 제공
+-Detaied Score : Requirement Coverage, Scenario Completeness 
+
+*Reviewer Summary
+-실무자가 먼저 확인해야할 사항을 우선순위로 제공하여 실무자의 검토 편의성 상승
+-잔여 RISk를 선제시하여 보완
+
+

@@ -1,0 +1,29 @@
+[1주차 실무 OJT]
+
+- NOS 구조 및 동작에 관한 기본적인 개념 이해
+(USM, VISTA, NOS , rAPP/ kubernetes를 통한 pods(rApp)들의 자율 관리)
+
+- USM : Configuration Management(CM : 네트워크 장비의 상태 및 설정값) , 
+Performance Management(PM : KPI data) 등의 정보를 수집 및 사용자에게 제공,
+Fault Management(FM : 오류 및 장애 관리)
+
+- VISTA 
+(1) USM의 단순 로그들을 가시성 있게 표현 해주는 다양한 기능을 제공(UI 기능)
+(2) rApp들의 기능을 받쳐주는 플랫폼 
+
+- NOS의 대표적 기능 -> SMO : 설치 자동화 , RIC : 운용 자동화 
+
+[개인 PJT 방향 토의]
+# Coverage Optimization Manager 문제 해결
+(1) Coverage Overshooting Cell 
+(2) Coverage hole Cell 
+
+=> RIC(운용 자동화) 측면의 rAPP(Software_Tilt)에 AI 적용 방향 및 평가 방법
+
+
+
+
+
+
+
+

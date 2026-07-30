@@ -1,0 +1,29 @@
+[2주차 실무 OJT]
+
+-TestTrackerV2를 활용한 COM(Coverage Optimization Management) 관련 TC 분석
+ (TC 8.6.2.1.15.3.1.1 etc...)
+-TC의 구성 요소(Overview, Purpose, Dependency&Limitation) 분석 
+; 연관된 FR10,11,12를 통해 Test Procedure & Pass/Fail Criteria 예측 및 비교
+
+-COM(Overshooting, hole) S/W Design Document를 통해 Definition, Behabioral Design, Detail Algorithm을 통한 구조 분석 
+(Engine Controller, COM Engine, Persistent Volume etc...)
+
+[개인 PJT] 
+주제 변경 => AI를 활용한 TC 생성 시에 겪는 문제점 개선 point를 도출하고 방안 마련
+: RAS 파트 팀원들이 AI를 활용하여 TC를 생성할 때 겪는 문제점을 TC Life Cycle의 분기 별로 분석
+
+TC생성 ->TC 검증 -> TC 수행
+
+
+# TC 생성 bottleneck
+(1) 생성 시간 : 한가지 FR에 대한 TC를 만드는데만 해도 3~4시간
+(하나의 rAPP에 많은 FR 존재 : interface(CM/PM), 알고리즘,GR(Geo Redundancy), UI, Architecture )
+파트 진행 해결책 : 하나의 rApp에 대해 통합 TC 생성
+(2) 품질 저하 : 생성형 AI가 만든 TC의 품질/성능이 떨어짐 --> 실무자의 검수 필요
+# TC 검증 bottleneck
+(1) 품질 저하로 인한 실무자의 검증 시간 증가
+
+생성형 AI를 통한 TC 생성 부분에(생성+검증)과정을 합쳐 실무자가 검증해야하는 TC 개수 감소+품질 상승을 유도하는 tool 생성
+[ 검증+의사결정 지원+수정 가이드 , Test Assistant ]
+(중요 사례 + 과거 현장&상용문제 case + Test 결과 등 추가적인 데이터를 이용하여 => 검증 자동화 tool을 만들기 )
+생성된 TC를 과거 Bug, 상용/현장 이슈, 기존 Test 결과, 유사 TC 등의 지식을 활용해 자동으로 보완하고 최종적으로 실무자가 바로 검토할 수 있는 품질 리포트까지 제공하는 AI Test Case Enhancement Engine

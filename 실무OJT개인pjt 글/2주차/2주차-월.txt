@@ -1,0 +1,21 @@
+#실무 OJT
+*프로그램 
+- mobaxtern : 명령어 공부 
+- NOS, MOSAIC 들어가기 : 로그 분석
+
+Test Tracker를 통한 Test Case 공부
+#8.6.2.1.15.3.1.1
+-Control for Overshooting Cell Detection and Resolution enabling with NE List
+
+Over View : NE List에 있는 cell 들에 대해서 Overshooting Cell Detection&Resolution 기능을 Carrier Frequency 별로 On/Off 기능을 제공해야한다 
+
+
+
+
+
+#개인 PJT
+-논문 공부 COM/CCO
+-자료 공부
+
+
+
